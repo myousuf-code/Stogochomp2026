@@ -150,16 +150,89 @@
             background: var(--surface-color);
         }
 
-        .user-greeting {
-            font-size: 1rem;
+        /* Content sections for dynamic display */
+        .content-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .content-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .content-section.hidden {
+            display: none;
+        }
+        
+        .schedule-item {
+            background: var(--surface-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .schedule-time {
             font-weight: 600;
             color: var(--primary-color);
-            text-align: center;
-            padding: 0.5rem 1rem;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tip-card {
             background: var(--surface-color);
+            padding: 1.5rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            display: none; /* Hidden in navigation */
+        }
+        
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .progress-item {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .progress-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            float: right;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+        }
+        
+        .close-btn:hover {
+            color: var(--text-color);
         }
         
         .container {
@@ -954,6 +1027,25 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Dynamic content areas -->
+            <div id="studyPlanContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('studyPlanContent')">&times;</button>
+                <h3>📚 Your Personalized Study Plan</h3>
+                <div id="studyPlanDetails"></div>
+            </div>
+            
+            <div id="sessionContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('sessionContent')">&times;</button>
+                <h3>📊 Study Sessions</h3>
+                <div id="sessionDetails"></div>
+            </div>
+            
+            <div id="templatesContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('templatesContent')">&times;</button>
+                <h3>📋 Study Plan Templates</h3>
+                <div id="templatesList"></div>
+            </div>
         </div>
     </section>
 
@@ -999,6 +1091,13 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Achievements content -->
+            <div id="achievementsContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('achievementsContent')">&times;</button>
+                <h3>🏆 Your Achievements</h3>
+                <div id="achievementsList"></div>
+            </div>
         </div>
     </section>
 
@@ -1030,6 +1129,13 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- AI Tips content -->
+            <div id="aiTipsContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('aiTipsContent')">&times;</button>
+                <h3>💡 Personalized Study Tips</h3>
+                <div id="tipsList"></div>
+            </div>
         </div>
     </section>
 
@@ -1060,6 +1166,19 @@
                         <button class="btn secondary" onclick="viewSchedule()">View Schedule</button>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Schedule content -->
+            <div id="scheduleContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('scheduleContent')">&times;</button>
+                <h3>📅 Your Study Schedule</h3>
+                <div id="scheduleDetails"></div>
+            </div>
+            
+            <div id="reminderFormContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('reminderFormContent')">&times;</button>
+                <h3>🔔 Create New Reminder</h3>
+                <div id="reminderForm"></div>
             </div>
         </div>
     </section>
@@ -1149,6 +1268,9 @@
             // Hide all page sections
             const pages = document.querySelectorAll('.page-section');
             pages.forEach(page => page.classList.remove('active'));
+            
+            // Hide all content sections when switching pages
+            hideAllContent();
             
             // Show selected page
             document.getElementById(pageId).classList.add('active');
@@ -1276,72 +1398,402 @@
             return responses[Math.floor(Math.random() * responses.length)];
         }
 
+        // Content Display Functions
+        function showContent(sectionId) {
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function closeContent(sectionId) {
+            document.getElementById(sectionId).classList.add('hidden');
+        }
+        
+        function hideAllContent() {
+            const contentSections = document.querySelectorAll('.content-section');
+            contentSections.forEach(section => section.classList.add('hidden'));
+        }
+
         // Quick Action Functions
         function quickStartStudy() {
-            alert('⚡ Starting Quick Study Session!\n\n🎯 25-minute Pomodoro timer activated\n📚 Focus mode enabled\n🔔 Break reminder set\n\n💪 Let\'s make this session productive!');
+            showPage('study');
+            setTimeout(() => {
+                createStudyPlan();
+            }, 300);
         }
         
         function setQuickReminder() {
-            const time = prompt('⏰ When should we remind you to study?', 'In 30 minutes');
-            if (time) {
-                alert(`🔔 Quick Reminder Set!\n\n⏰ Time: ${time}\n📚 Activity: Study session\n🎯 Type: Smart notification\n\n✅ We'll notify you when it's time!`);
-            }
+            showPage('reminders');
+            setTimeout(() => {
+                setReminder();
+            }, 300);
         }
 
         // Study Plan Functions
         function createStudyPlan() {
-            const subject = prompt('📚 What subject would you like to create a study plan for?', 'Mathematics');
-            if (subject) {
-                alert(`🎯 Creating Personalized Study Plan!\n\n📖 Subject: ${subject}\n🧠 AI Analysis: In progress\n📅 Schedule: Being optimized\n🏆 Goals: Being set\n\n✨ Your customized plan will be ready in moments!`);
-            }
+            hideAllContent();
+            const content = document.getElementById('studyPlanDetails');
+            content.innerHTML = `
+                <div class="progress-stats">
+                    <div class="progress-item">
+                        <span class="progress-number">📚</span>
+                        <div>Subject: Mathematics</div>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">⏰</span>
+                        <div>Duration: 6 weeks</div>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">🎯</span>
+                        <div>Daily Target: 2 hours</div>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">🤖</span>
+                        <div>AI Optimized: Yes</div>
+                    </div>
+                </div>
+                <h4>📅 Weekly Breakdown:</h4>
+                <div class="schedule-item">
+                    <div class="schedule-time">Week 1-2:</div>
+                    <div>Foundation topics, Basic algebra, Linear equations</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">Week 3-4:</div>
+                    <div>Advanced concepts, Quadratic equations, Functions</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">Week 5-6:</div>
+                    <div>Practice problems, Mock tests, Review sessions</div>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn" onclick="alert('Study plan would be saved to your account!')">Save Plan</button>
+                    <button class="btn secondary" onclick="startSession()">Start First Session</button>
+                </div>
+            `;
+            showContent('studyPlanContent');
         }
         
         function viewTemplates() {
-            alert('📋 Study Plan Templates Available:\n\n🎓 Exam Preparation (2-4 weeks)\n📚 Skill Building (6-8 weeks)\n🌍 Language Learning (12 weeks)\n💻 Programming Course (8-10 weeks)\n🧪 Science Review (4-6 weeks)\n\n🎯 Choose a template to get started quickly!');
+            hideAllContent();
+            const content = document.getElementById('templatesList');
+            content.innerHTML = `
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4>🎓 Exam Preparation</h4>
+                        <p>Intensive 4-week program for major exams</p>
+                        <div style="margin-top: 1rem;">
+                            <small>Duration: 2-4 weeks</small>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <h4>📚 Skill Building</h4>
+                        <p>Long-term skill development program</p>
+                        <div style="margin-top: 1rem;">
+                            <small>Duration: 6-8 weeks</small>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🌍 Language Learning</h4>
+                        <p>Structured language acquisition plan</p>
+                        <div style="margin-top: 1rem;">
+                            <small>Duration: 12 weeks</small>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <h4>💻 Programming Course</h4>
+                        <p>Complete programming bootcamp schedule</p>
+                        <div style="margin-top: 1rem;">
+                            <small>Duration: 8-10 weeks</small>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showContent('templatesContent');
         }
         
         function startSession() {
-            alert('🎯 Starting Study Session!\n\n⏰ Duration: 45 minutes\n🧠 AI coaching: Active\n📊 Progress tracking: Enabled\n🔔 Break reminders: Set\n\n🚀 Let\'s achieve your learning goals!');
+            hideAllContent();
+            const content = document.getElementById('sessionDetails');
+            content.innerHTML = `
+                <div class="progress-stats">
+                    <div class="progress-item">
+                        <span class="progress-number">⏰</span>
+                        <div>Session Length</div>
+                        <small>45 minutes</small>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">🤖</span>
+                        <div>AI Coaching</div>
+                        <small>Active</small>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">📊</span>
+                        <div>Progress Tracking</div>
+                        <small>Enabled</small>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">🔔</span>
+                        <div>Break Reminders</div>
+                        <small>Every 25 min</small>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 2rem 0;">
+                    <h3>🚀 Ready to Start Your Study Session?</h3>
+                    <p>Focus on: <strong>Mathematics - Algebra Review</strong></p>
+                    <button class="btn" style="font-size: 1.1rem; padding: 1rem 2rem;" onclick="alert('Study session started! Timer running...')">Start 45-Min Session</button>
+                </div>
+            `;
+            showContent('sessionContent');
         }
         
         function viewSessions() {
-            alert('📊 Your Study Sessions:\n\n✅ Completed Today: 2 sessions (1.5 hours)\n📅 This Week: 8 sessions (6.2 hours)\n🏆 Total Sessions: 47\n📈 Completion Rate: 89%\n⭐ Average Score: 85%\n\n🌟 Excellent progress! Keep it up!');
+            hideAllContent();
+            const content = document.getElementById('sessionDetails');
+            content.innerHTML = `
+                <h4>📊 Your Study History</h4>
+                <div class="schedule-item">
+                    <div class="schedule-time">Today:</div>
+                    <div>2 sessions completed (1.5 hours) - Mathematics, Physics</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">This Week:</div>
+                    <div>8 sessions (6.2 hours) - 89% completion rate</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">Total Sessions:</div>
+                    <div>47 sessions - Average score: 85%</div>
+                </div>
+                <div class="progress-stats" style="margin-top: 2rem;">
+                    <div class="progress-item">
+                        <span class="progress-number">🎆</span>
+                        <div>Streak</div>
+                        <small>5 days</small>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">⭐</span>
+                        <div>Best Subject</div>
+                        <small>Mathematics</small>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">📈</span>
+                        <div>Improvement</div>
+                        <small>+23%</small>
+                    </div>
+                </div>
+            `;
+            showContent('sessionContent');
         }
 
         // Progress Functions
         function viewAchievements() {
-            alert('🏆 Your Achievements:\n\n🔥 7-Day Study Streak\n📚 Completed 50+ Sessions\n🎯 Goal Achiever (90% completion rate)\n⏰ Early Bird (Morning study sessions)\n🧠 Knowledge Master (High quiz scores)\n💯 Perfect Week (Daily goals met)\n\n🌟 Total Points: 1,247\n🏅 Level: Advanced Learner');
+            hideAllContent();
+            const content = document.getElementById('achievementsList');
+            content.innerHTML = `
+                <div class="tips-grid">
+                    <div class="tip-card" style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333;">
+                        <h4>🔥 7-Day Study Streak</h4>
+                        <p>Completed study sessions for 7 consecutive days</p>
+                        <small>Earned: 2 days ago</small>
+                    </div>
+                    <div class="tip-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;">
+                        <h4>📚 50+ Sessions Master</h4>
+                        <p>Successfully completed over 50 study sessions</p>
+                        <small>Earned: 1 week ago</small>
+                    </div>
+                    <div class="tip-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7); color: #333;">
+                        <h4>🎯 Goal Achiever</h4>
+                        <p>Maintained 90%+ completion rate</p>
+                        <small>Earned: 3 days ago</small>
+                    </div>
+                    <div class="tip-card" style="background: linear-gradient(135deg, #fa709a, #fee140); color: white;">
+                        <h4>⏰ Early Bird</h4>
+                        <p>Completed 10+ morning study sessions</p>
+                        <small>Earned: 5 days ago</small>
+                    </div>
+                    <div class="tip-card" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: #333;">
+                        <h4>🧠 Knowledge Master</h4>
+                        <p>Scored 85%+ average on quiz assessments</p>
+                        <small>Earned: Yesterday</small>
+                    </div>
+                    <div class="tip-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                        <h4>💯 Perfect Week</h4>
+                        <p>Met daily study goals for entire week</p>
+                        <small>Earned: Today</small>
+                    </div>
+                </div>
+                <div class="progress-stats" style="margin-top: 2rem;">
+                    <div class="progress-item">
+                        <span class="progress-number">1,247</span>
+                        <div>Total Points</div>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">Level 8</span>
+                        <div>Advanced Learner</div>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">12</span>
+                        <div>Badges Earned</div>
+                    </div>
+                </div>
+            `;
+            showContent('achievementsContent');
         }
 
         // AI Assistant Functions
         function getTips() {
+            hideAllContent();
+            const content = document.getElementById('tipsList');
             const tips = [
-                "🧠 Use the Pomodoro technique: 25 minutes focused study, 5 minutes break",
-                "📝 Create mind maps to visualize connections between concepts", 
-                "🎯 Set specific, measurable study goals for each session",
-                "💡 Teach concepts to someone else to reinforce your learning",
-                "🔄 Review material within 24 hours for better retention",
-                "📖 Break complex topics into smaller, manageable chunks",
-                "🏆 Reward yourself for completing study milestones",
-                "🎵 Find your optimal study environment - some prefer silence, others soft music"
+                {
+                    icon: '🤖',
+                    title: 'Pomodoro Technique',
+                    tip: 'Use 25-minute focused study sessions followed by 5-minute breaks for optimal concentration and retention.'
+                },
+                {
+                    icon: '📝',
+                    title: 'Mind Mapping',
+                    tip: 'Create visual mind maps to connect concepts and see the bigger picture of what you\'re learning.'
+                },
+                {
+                    icon: '🎯',
+                    title: 'SMART Goals',
+                    tip: 'Set Specific, Measurable, Achievable, Relevant, and Time-bound study goals for each session.'
+                },
+                {
+                    icon: '🗣️',
+                    title: 'Teaching Method',
+                    tip: 'Explain concepts out loud or teach them to someone else to reinforce your understanding.'
+                },
+                {
+                    icon: '🔄',
+                    title: 'Spaced Repetition',
+                    tip: 'Review material at increasing intervals (1 day, 3 days, 1 week, 2 weeks) for long-term retention.'
+                },
+                {
+                    icon: '🔬',
+                    title: 'Feynman Technique',
+                    tip: 'Break down complex topics by explaining them in simple terms as if teaching a child.'
+                }
             ];
             
-            const randomTip = tips[Math.floor(Math.random() * tips.length)];
-            alert(`💡 AI Study Tip:\n\n${randomTip}\n\n🤖 Want more personalized advice? Chat with our AI assistant!`);
+            content.innerHTML = `
+                <div class="tips-grid">
+                    ${tips.map(tip => `
+                        <div class="tip-card">
+                            <h4>${tip.icon} ${tip.title}</h4>
+                            <p>${tip.tip}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <p><strong>🤖 Want more personalized advice?</strong></p>
+                    <button class="btn" onclick="openChatbot()">Chat with AI Assistant</button>
+                </div>
+            `;
+            showContent('aiTipsContent');
         }
 
         // Reminder Functions
         function setReminder() {
-            const activity = prompt('📚 What would you like to be reminded about?', 'Study Mathematics');
-            const time = prompt('⏰ When should we remind you?', '2:00 PM');
+            hideAllContent();
+            const content = document.getElementById('reminderForm');
+            content.innerHTML = `
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">What should we remind you about?</label>
+                        <input type="text" id="reminderActivity" placeholder="Study Mathematics" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">When?</label>
+                        <input type="text" id="reminderTime" placeholder="2:00 PM" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Reminder Type</label>
+                        <select id="reminderType" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Study Session</option>
+                            <option>Break Reminder</option>
+                            <option>Review Session</option>
+                            <option>Assignment Due</option>
+                        </select>
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="btn" onclick="createReminder()" style="padding: 0.75rem 2rem;">Create Reminder</button>
+                    </div>
+                </div>
+            `;
+            showContent('reminderFormContent');
+        }
+        
+        function createReminder() {
+            const activity = document.getElementById('reminderActivity').value || 'Study Session';
+            const time = document.getElementById('reminderTime').value || '2:00 PM';
+            const type = document.getElementById('reminderType').value;
             
-            if (activity && time) {
-                alert(`⏰ Smart Reminder Created!\n\n📋 Activity: ${activity}\n🕐 Time: ${time}\n🧠 AI insights: Enabled\n🔔 Notification type: Smart alert\n☕ Break reminder: Included\n\n✅ All set! We'll keep you on track!`);
-            }
+            const content = document.getElementById('reminderForm');
+            content.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                    <h3>Reminder Created Successfully!</h3>
+                    <div class="schedule-item" style="margin: 1.5rem auto; max-width: 400px;">
+                        <div class="schedule-time">${time}</div>
+                        <div><strong>${activity}</strong></div>
+                        <div><small>Type: ${type}</small></div>
+                    </div>
+                    <p>You'll receive a smart notification with AI insights and motivation!</p>
+                    <button class="btn secondary" onclick="setReminder()">Create Another</button>
+                </div>
+            `;
         }
         
         function viewSchedule() {
-            alert('📅 Your Study Schedule:\n\n📚 Today:\n  • 2:00 PM - Mathematics (45 min)\n  • 4:00 PM - Physics (30 min)\n  • 7:00 PM - Review session\n\n📋 Tomorrow:\n  • 9:00 AM - Chemistry lab\n  • 2:00 PM - History reading\n  • 5:00 PM - Practice quiz\n\n🎯 Weekly Goal: 12 hours | Progress: 8.5h (71%)');
+            hideAllContent();
+            const content = document.getElementById('scheduleDetails');
+            content.innerHTML = `
+                <div class="schedule-item">
+                    <div class="schedule-time">📅 Today</div>
+                    <div>
+                        <div>• 2:00 PM - Mathematics (45 min)</div>
+                        <div>• 4:00 PM - Physics (30 min)</div>
+                        <div>• 7:00 PM - Review session</div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">📅 Tomorrow</div>
+                    <div>
+                        <div>• 9:00 AM - Chemistry lab</div>
+                        <div>• 2:00 PM - History reading</div>
+                        <div>• 5:00 PM - Practice quiz</div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">📅 This Week</div>
+                    <div>
+                        <div>• Monday: Mathematics, Physics</div>
+                        <div>• Tuesday: Chemistry, Biology</div>
+                        <div>• Wednesday: History, English</div>
+                        <div>• Thursday: Review day</div>
+                        <div>• Friday: Practice tests</div>
+                    </div>
+                </div>
+                <div class="progress-stats" style="margin-top: 2rem;">
+                    <div class="progress-item">
+                        <span class="progress-number">12h</span>
+                        <div>Weekly Goal</div>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">8.5h</span>
+                        <div>Completed</div>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-number">71%</span>
+                        <div>Progress</div>
+                    </div>
+                </div>
+            `;
+            showContent('scheduleContent');
         }
 
         // Authentication Functions
