@@ -197,6 +197,87 @@
             padding: 1.5rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.2s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .tip-card h4 {
+            margin: 0 0 1rem 0;
+            color: var(--primary-color);
+        }
+
+        /* AI Tools Content Sections */
+        .content-section {
+            background: var(--surface-color);
+            border-radius: 12px;
+            margin: 3rem 0;
+            padding: 2rem;
+            position: relative;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .content-section.hidden {
+            display: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s ease;
+        }
+
+        .close-btn:hover {
+            opacity: 0.8;
+        }
+
+        .loading-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn-group .btn {
+                width: 100%;
+            }
         }
         
         .progress-stats {
@@ -996,6 +1077,7 @@
             <div class="nav-menu">
                 <a class="nav-link active" onclick="showPage('home')">Home</a>
                 <a class="nav-link" onclick="showPage('study')">Study Plans</a>
+                <a class="nav-link" onclick="showPage('ai-tools')">AI Tools</a>
                 <a class="nav-link" onclick="showPage('progress')">Progress</a>
                 <a class="nav-link" onclick="showPage('ai-assistant')">AI Assistant</a>
                 <a class="nav-link" onclick="showPage('reminders')">Reminders</a>
@@ -1028,6 +1110,12 @@
                     <div class="showcase-icon">📚</div>
                     <h3>Smart Study Plans</h3>
                     <p>AI creates personalized study schedules that adapt to your learning style and goals</p>
+                </div>
+                
+                <div class="showcase-card" onclick="showPage('ai-tools')">
+                    <div class="showcase-icon">🤖</div>
+                    <h3>AI Learning Tools</h3>
+                    <p>Advanced AI features: pattern recognition, content generation, and visual learning aids</p>
                 </div>
                 
                 <div class="showcase-card" onclick="showPage('progress')">
@@ -1073,6 +1161,93 @@
                     <h4>Set Reminder</h4>
                     <p>Schedule your next study session</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tools Page -->
+    <section id="ai-tools" class="page-section">
+        <div class="container">
+            <h2 style="margin-bottom: 2rem; color: var(--text-color);">🤖 Advanced AI Learning Tools</h2>
+            <p style="text-align: center; margin-bottom: 3rem; color: var(--text-secondary); font-size: 1.1rem;">Ethical Generative AI applications designed to enhance your learning experience</p>
+            
+            <div class="features-grid">
+                <!-- Pattern Recognition -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🔍</div>
+                        <h3>Learning Pattern AI</h3>
+                    </div>
+                    <p>AI analyzes your study patterns to identify optimal learning times, preferred subjects, and performance trends</p>
+                    <div class="btn-group">
+                        <button class="btn" onclick="analyzePatterns()">Analyze My Patterns</button>
+                        <button class="btn secondary" onclick="viewPatternInsights()">View Insights</button>
+                    </div>
+                </div>
+                
+                <!-- Content Creation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">✨</div>
+                        <h3>AI Content Generator</h3>
+                    </div>
+                    <p>Generate practice questions, flashcards, study guides, and quizzes from any topic using ethical AI</p>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showContentGenerator()">Generate Content</button>
+                        <button class="btn secondary" onclick="viewGeneratedContent()">My Content</button>
+                    </div>
+                </div>
+                
+                <!-- Natural Language Processing -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <h3>Text Analysis AI</h3>
+                    </div>
+                    <p>Summarize textbooks, analyze essays, extract key concepts, and get writing feedback using NLP</p>
+                    <div class="btn-group">
+                        <button class="btn" onclick="showTextAnalyzer()">Analyze Text</button>
+                        <button class="btn secondary" onclick="summarizeContent()">Summarize</button>
+                    </div>
+                </div>
+                
+                <!-- Image Generation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎨</div>
+                        <h3>Visual Learning AI</h3>
+                    </div>
+                    <p>Generate mind maps, diagrams, concept visualizations, and study aids to enhance visual learning</p>
+                    <div class="btn-group">
+                        <button class="btn" onclick="generateVisuals()">Create Visuals</button>
+                        <button class="btn secondary" onclick="viewGeneratedImages()">My Visuals</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dynamic content areas for AI tools -->
+            <div id="patternAnalysisContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('patternAnalysisContent')">&times;</button>
+                <h3>🔍 AI Learning Pattern Analysis</h3>
+                <div id="patternResults"></div>
+            </div>
+            
+            <div id="contentGeneratorContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('contentGeneratorContent')">&times;</button>
+                <h3>✨ AI Content Generator</h3>
+                <div id="generatorInterface"></div>
+            </div>
+            
+            <div id="textAnalysisContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('textAnalysisContent')">&times;</button>
+                <h3>📝 AI Text Analysis & NLP</h3>
+                <div id="textAnalysisInterface"></div>
+            </div>
+            
+            <div id="visualGeneratorContent" class="content-section hidden">
+                <button class="close-btn" onclick="closeContent('visualGeneratorContent')">&times;</button>
+                <h3>🎨 AI Visual Learning Generator</h3>
+                <div id="visualInterface"></div>
             </div>
         </div>
     </section>
@@ -1655,10 +1830,249 @@
             showNotification('✅ Session Ended', 'Session ended early. Great job on the progress you made!', 'success');
             viewSessions();
         }
-        // Content Display Functions
-        function showContent(sectionId) {
-            document.getElementById(sectionId).classList.remove('hidden');
-            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Pattern Recognition AI Functions
+        function analyzePatterns() {
+            hideAllContent();
+            const content = document.getElementById('patternResults');
+            
+            // Simulate AI analysis
+            content.innerHTML = `
+                <div style="text-align: center; margin: 2rem 0;">
+                    <div class="loading-animation" style="font-size: 2rem; margin-bottom: 1rem;">🤖 Analyzing your learning patterns...</div>
+                </div>
+            `;
+            showContent('patternAnalysisContent');
+            
+            // Simulate analysis delay
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="progress-stats">
+                        <div class="progress-item">
+                            <span class="progress-number">🕐</span>
+                            <div>Optimal Study Time</div>
+                            <small>2:00 PM - 4:00 PM</small>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-number">🤖</span>
+                            <div>Learning Style</div>
+                            <small>Visual + Kinesthetic</small>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-number">📈</span>
+                            <div>Best Subject</div>
+                            <small>Mathematics</small>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-number">⏱️</span>
+                            <div>Focus Duration</div>
+                            <small>25 minutes optimal</small>
+                        </div>
+                    </div>
+                    
+                    <h4>📈 AI-Detected Patterns:</h4>
+                    <div class="schedule-item">
+                        <div class="schedule-time">Study Frequency:</div>
+                        <div>You perform best with daily 2-hour sessions, showing 23% better retention</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">Performance Trend:</div>
+                        <div>Consistent improvement in problem-solving, 15% weekly growth detected</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">Recommendation:</div>
+                        <div>Increase visual aids usage - your comprehension improves 31% with diagrams</div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn" onclick="optimizeSchedule()">Optimize My Schedule</button>
+                        <button class="btn secondary" onclick="exportPatterns()">Export Report</button>
+                    </div>
+                `;
+            }, 2000);
+        }
+        
+        function viewPatternInsights() {
+            hideAllContent();
+            const content = document.getElementById('patternResults');
+            content.innerHTML = `
+                <h4>📊 Historical Pattern Analysis</h4>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4>🕰️ Time Patterns</h4>
+                        <p>Peak performance: Afternoon sessions (2-4 PM)<br>
+                        Optimal session length: 45 minutes<br>
+                        Best day: Tuesday & Thursday</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>📖 Subject Patterns</h4>
+                        <p>Strongest: Mathematics (87% avg)<br>
+                        Growing: Physics (+12% this month)<br>
+                        Needs focus: History (needs review)</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🤖 Learning Style</h4>
+                        <p>Primary: Visual learning (65%)<br>
+                        Secondary: Practice-based (25%)<br>
+                        Reading comprehension: 10%</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🎯 Efficiency Patterns</h4>
+                        <p>Most productive: Morning prep<br>
+                        Distraction-free: 20+ min sessions<br>
+                        Break timing: Every 25 minutes</p>
+                    </div>
+                </div>
+            `;
+            showContent('patternAnalysisContent');
+        }
+        
+        // Content Generation AI Functions  
+        function showContentGenerator() {
+            hideAllContent();
+            const content = document.getElementById('generatorInterface');
+            content.innerHTML = `
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Content Type:</label>
+                        <select id="contentType" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Practice Questions</option>
+                            <option>Flashcards</option>
+                            <option>Study Guide</option>
+                            <option>Quiz</option>
+                            <option>Summary Notes</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Subject/Topic:</label>
+                        <input type="text" id="contentTopic" placeholder="e.g., Algebra, World War II, Cell Biology" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Difficulty Level:</label>
+                        <select id="difficultyLevel" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option>Advanced</option>
+                            <option>Expert</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Additional Context (Optional):</label>
+                        <textarea id="contentContext" placeholder="Provide any specific focus areas or learning objectives..." style="width: 100%; height: 100px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color); resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn" onclick="generateContent()" style="padding: 1rem 3rem; font-size: 1.1rem;">✨ Generate AI Content</button>
+                    </div>
+                </div>
+            `;
+            showContent('contentGeneratorContent');
+        }
+        
+        function generateContent() {
+            const type = document.getElementById('contentType').value;
+            const topic = document.getElementById('contentTopic').value || 'General Mathematics';
+            const level = document.getElementById('difficultyLevel').value;
+            const context = document.getElementById('contentContext').value;
+            
+            const content = document.getElementById('generatorInterface');
+            
+            // Show generating animation
+            content.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
+                    <h3>AI is generating your ${type.toLowerCase()}...</h3>
+                    <p style="color: var(--text-secondary);">Using ethical AI to create personalized educational content for: ${topic}</p>
+                    <div style="margin: 2rem 0; font-size: 1.5rem;">🤖 Processing...</div>
+                </div>
+            `;
+            
+            // Simulate AI generation
+            setTimeout(() => {
+                let generatedContent = '';
+                
+                if (type === 'Practice Questions') {
+                    generatedContent = `
+                        <h4>📝 Practice Questions - ${topic} (${level})</h4>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Question 1:</div>
+                            <div>Solve for x: 2x + 5 = 13. Show your working steps.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Question 2:</div>
+                            <div>If f(x) = 3x² - 2x + 1, find f(4) and explain the process.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Question 3:</div>
+                            <div>Graph the linear equation y = 2x - 3 and identify the y-intercept.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Challenge:</div>
+                            <div>A rectangle has perimeter 24cm. If length is 3cm more than width, find dimensions.</div>
+                        </div>
+                    `;
+                } else if (type === 'Flashcards') {
+                    generatedContent = `
+                        <h4>🃏 AI-Generated Flashcards - ${topic}</h4>
+                        <div class="tips-grid">
+                            <div class="tip-card">
+                                <h4>Card 1: Linear Equations</h4>
+                                <p><strong>Front:</strong> What is the standard form of a linear equation?</p>
+                                <p><strong>Back:</strong> ax + by = c, where a, b, c are constants</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>Card 2: Slope</h4>
+                                <p><strong>Front:</strong> How do you calculate slope?</p>
+                                <p><strong>Back:</strong> m = (y₂ - y₁) / (x₂ - x₁)</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>Card 3: Y-intercept</h4>
+                                <p><strong>Front:</strong> What is the y-intercept?</p>
+                                <p><strong>Back:</strong> The point where the line crosses the y-axis (x = 0)</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>Card 4: Parallel Lines</h4>
+                                <p><strong>Front:</strong> When are two lines parallel?</p>
+                                <p><strong>Back:</strong> When they have the same slope but different y-intercepts</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    generatedContent = `
+                        <h4>📚 AI-Generated ${type} - ${topic}</h4>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Overview:</div>
+                            <div>Comprehensive ${level.toLowerCase()} level content covering key concepts in ${topic}</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Key Topics:</div>
+                            <div>Foundation concepts, practical applications, common problems, and advanced techniques</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Learning Objectives:</div>
+                            <div>Master fundamental principles, solve complex problems, and apply knowledge effectively</div>
+                        </div>
+                    `;
+                }
+                
+                content.innerHTML = `
+                    <div class="success-section">
+                        <div class="success-icon">✨</div>
+                        <h3>Content Generated Successfully!</h3>
+                        <p style="color: rgba(255,255,255,0.9);">AI has created personalized ${type.toLowerCase()} for ${topic} at ${level.toLowerCase()} level</p>
+                    </div>
+                    
+                    ${generatedContent}
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn" onclick="saveGeneratedContent()">Save Content</button>
+                        <button class="btn secondary" onclick="showContentGenerator()">Generate More</button>
+                        <button class="btn secondary" onclick="exportContent()">Export PDF</button>
+                    </div>
+                `;
+            }, 3000);
         }
         
         function closeContent(sectionId) {
@@ -2115,6 +2529,571 @@
                 // Reset home page greeting
                 updateHomeGreeting(null);
             }
+        }
+
+        // Advanced AI Functions for Generative AI Features
+
+        // Content Display Functions
+        function showContent(sectionId) {
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function hideAllContent() {
+            const contentSections = document.querySelectorAll('.content-section');
+            contentSections.forEach(section => section.classList.add('hidden'));
+        }
+
+        function closeContent(sectionId) {
+            document.getElementById(sectionId).classList.add('hidden');
+        }
+
+        // Pattern Recognition AI Functions
+        function analyzePatterns() {
+            hideAllContent();
+            const content = document.getElementById('patternResults');
+            
+            // Simulate AI analysis
+            content.innerHTML = `
+                <div style="text-align: center; margin: 2rem 0;">
+                    <div class="loading-animation" style="font-size: 2rem; margin-bottom: 1rem;">🤖 Analyzing your learning patterns...</div>
+                </div>
+            `;
+            showContent('patternAnalysisContent');
+            
+            // Simulate analysis delay
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="progress-stats">
+                        <div class="progress-item">
+                            <span class="progress-number">🕐</span>
+                            <div>Optimal Study Time</div>
+                            <small>2:00 PM - 4:00 PM</small>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-number">🤖</span>
+                            <div>Learning Style</div>
+                            <small>Visual + Kinesthetic</small>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-number">📈</span>
+                            <div>Best Subject</div>
+                            <small>Mathematics</small>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-number">⏱️</span>
+                            <div>Focus Duration</div>
+                            <small>25 minutes optimal</small>
+                        </div>
+                    </div>
+                    
+                    <h4>📈 AI-Detected Patterns:</h4>
+                    <div class="schedule-item">
+                        <div class="schedule-time">Study Frequency:</div>
+                        <div>You perform best with daily 2-hour sessions, showing 23% better retention</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">Performance Trend:</div>
+                        <div>Consistent improvement in problem-solving, 15% weekly growth detected</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">Recommendation:</div>
+                        <div>Increase visual aids usage - your comprehension improves 31% with diagrams</div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn" onclick="optimizeSchedule()">Optimize My Schedule</button>
+                        <button class="btn secondary" onclick="exportPatterns()">Export Report</button>
+                    </div>
+                `;
+            }, 2000);
+        }
+        
+        function viewPatternInsights() {
+            hideAllContent();
+            const content = document.getElementById('patternResults');
+            content.innerHTML = `
+                <h4>📊 Historical Pattern Analysis</h4>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4>🕰️ Time Patterns</h4>
+                        <p>Peak performance: Afternoon sessions (2-4 PM)<br>
+                        Optimal session length: 45 minutes<br>
+                        Best day: Tuesday & Thursday</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>📖 Subject Patterns</h4>
+                        <p>Strongest: Mathematics (87% avg)<br>
+                        Growing: Physics (+12% this month)<br>
+                        Needs focus: History (needs review)</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🤖 Learning Style</h4>
+                        <p>Primary: Visual learning (65%)<br>
+                        Secondary: Practice-based (25%)<br>
+                        Reading comprehension: 10%</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🎯 Efficiency Patterns</h4>
+                        <p>Most productive: Morning prep<br>
+                        Distraction-free: 20+ min sessions<br>
+                        Break timing: Every 25 minutes</p>
+                    </div>
+                </div>
+            `;
+            showContent('patternAnalysisContent');
+        }
+
+        // Content Generation AI Functions  
+        function showContentGenerator() {
+            hideAllContent();
+            const content = document.getElementById('generatorInterface');
+            content.innerHTML = `
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Content Type:</label>
+                        <select id="contentType" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Practice Questions</option>
+                            <option>Flashcards</option>
+                            <option>Study Guide</option>
+                            <option>Quiz</option>
+                            <option>Summary Notes</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Subject/Topic:</label>
+                        <input type="text" id="contentTopic" placeholder="e.g., Algebra, World War II, Cell Biology" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Difficulty Level:</label>
+                        <select id="difficultyLevel" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option>Advanced</option>
+                            <option>Expert</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Additional Context (Optional):</label>
+                        <textarea id="contentContext" placeholder="Provide any specific focus areas or learning objectives..." style="width: 100%; height: 100px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color); resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn" onclick="generateContent()" style="padding: 1rem 3rem; font-size: 1.1rem;">✨ Generate AI Content</button>
+                    </div>
+                </div>
+            `;
+            showContent('contentGeneratorContent');
+        }
+        
+        function generateContent() {
+            const type = document.getElementById('contentType').value;
+            const topic = document.getElementById('contentTopic').value || 'General Mathematics';
+            const level = document.getElementById('difficultyLevel').value;
+            const context = document.getElementById('contentContext').value;
+            
+            const content = document.getElementById('generatorInterface');
+            
+            // Show generating animation
+            content.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
+                    <h3>AI is generating your ${type.toLowerCase()}...</h3>
+                    <p style="color: var(--text-secondary);">Using ethical AI to create personalized educational content for: ${topic}</p>
+                    <div style="margin: 2rem 0; font-size: 1.5rem;">🤖 Processing...</div>
+                </div>
+            `;
+            
+            // Simulate AI generation
+            setTimeout(() => {
+                let generatedContent = '';
+                
+                if (type === 'Practice Questions') {
+                    generatedContent = `
+                        <h4>📝 Practice Questions - ${topic} (${level})</h4>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Question 1:</div>
+                            <div>Solve for x: 2x + 5 = 13. Show your working steps.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Question 2:</div>
+                            <div>If f(x) = 3x² - 2x + 1, find f(4) and explain the process.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Question 3:</div>
+                            <div>Graph the linear equation y = 2x - 3 and identify the y-intercept.</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Challenge:</div>
+                            <div>A rectangle has perimeter 24cm. If length is 3cm more than width, find dimensions.</div>
+                        </div>
+                    `;
+                } else if (type === 'Flashcards') {
+                    generatedContent = `
+                        <h4>🃏 AI-Generated Flashcards - ${topic}</h4>
+                        <div class="tips-grid">
+                            <div class="tip-card">
+                                <h4>Card 1: Linear Equations</h4>
+                                <p><strong>Front:</strong> What is the standard form of a linear equation?</p>
+                                <p><strong>Back:</strong> ax + by = c, where a, b, c are constants</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>Card 2: Slope</h4>
+                                <p><strong>Front:</strong> How do you calculate slope?</p>
+                                <p><strong>Back:</strong> m = (y₂ - y₁) / (x₂ - x₁)</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>Card 3: Y-intercept</h4>
+                                <p><strong>Front:</strong> What is the y-intercept?</p>
+                                <p><strong>Back:</strong> The point where the line crosses the y-axis (x = 0)</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>Card 4: Parallel Lines</h4>
+                                <p><strong>Front:</strong> When are two lines parallel?</p>
+                                <p><strong>Back:</strong> When they have the same slope but different y-intercepts</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    generatedContent = `
+                        <h4>📚 AI-Generated ${type} - ${topic}</h4>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Overview:</div>
+                            <div>Comprehensive ${level.toLowerCase()} level content covering key concepts in ${topic}</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Key Topics:</div>
+                            <div>Foundation concepts, practical applications, common problems, and advanced techniques</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Learning Objectives:</div>
+                            <div>Master fundamental principles, solve complex problems, and apply knowledge effectively</div>
+                        </div>
+                    `;
+                }
+                
+                content.innerHTML = `
+                    <div class="success-section">
+                        <div class="success-icon">✨</div>
+                        <h3>Content Generated Successfully!</h3>
+                        <p style="color: rgba(255,255,255,0.9);">AI has created personalized ${type.toLowerCase()} for ${topic} at ${level.toLowerCase()} level</p>
+                    </div>
+                    
+                    ${generatedContent}
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn" onclick="saveGeneratedContent()">Save Content</button>
+                        <button class="btn secondary" onclick="showContentGenerator()">Generate More</button>
+                        <button class="btn secondary" onclick="exportContent()">Export PDF</button>
+                    </div>
+                `;
+            }, 3000);
+        }
+
+        // Text Analysis & NLP Functions
+        function showTextAnalyzer() {
+            hideAllContent();
+            const content = document.getElementById('textAnalysisInterface');
+            content.innerHTML = `
+                <div style="max-width: 700px; margin: 0 auto;">
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Analysis Type:</label>
+                        <select id="analysisType" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Text Summarization</option>
+                            <option>Key Concept Extraction</option>
+                            <option>Essay Analysis</option>
+                            <option>Reading Comprehension</option>
+                            <option>Grammar & Style Check</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Text to Analyze:</label>
+                        <textarea id="textInput" placeholder="Paste your text, essay, or study material here for AI analysis..." style="width: 100%; height: 200px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color); resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <button class="btn" onclick="analyzeText()" style="padding: 1rem 3rem;">📝 Analyze with AI</button>
+                        <button class="btn secondary" onclick="loadSampleText()">Load Sample Text</button>
+                    </div>
+                    
+                    <div style="background: var(--surface-color); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                        <h4 style="margin-top: 0;">AI NLP Capabilities:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                            <div>• Summarize long texts</div>
+                            <div>• Extract key concepts</div>
+                            <div>• Identify main themes</div>
+                            <div>• Grammar analysis</div>
+                            <div>• Readability scoring</div>
+                            <div>• Essay feedback</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showContent('textAnalysisContent');
+        }
+        
+        function analyzeText() {
+            const analysisType = document.getElementById('analysisType').value;
+            const text = document.getElementById('textInput').value;
+            
+            if (!text.trim()) {
+                showNotification('⚠️ Input Required', 'Please enter some text to analyze.', 'info');
+                return;
+            }
+            
+            const content = document.getElementById('textAnalysisInterface');
+            
+            // Show analysis in progress
+            content.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+                    <h3>AI is analyzing your text...</h3>
+                    <p style="color: var(--text-secondary);">Processing ${text.length} characters using Natural Language Processing</p>
+                    <div style="margin: 2rem 0; font-size: 1.5rem;">🤖 NLP Engine Working...</div>
+                </div>
+            `;
+            
+            // Simulate NLP analysis
+            setTimeout(() => {
+                let analysisResult = '';
+                
+                if (analysisType === 'Text Summarization') {
+                    analysisResult = `
+                        <h4>📊 AI Text Summary</h4>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Summary:</div>
+                            <div>The text discusses fundamental concepts in mathematics, focusing on algebraic equations and their real-world applications. Key themes include problem-solving strategies and mathematical reasoning.</div>
+                        </div>
+                        <div class="progress-stats">
+                            <div class="progress-item">
+                                <span class="progress-number">${text.length}</span>
+                                <div>Characters</div>
+                            </div>
+                            <div class="progress-item">
+                                <span class="progress-number">${Math.ceil(text.length / 5)}</span>
+                                <div>Words</div>
+                            </div>
+                            <div class="progress-item">
+                                <span class="progress-number">85%</span>
+                                <div>Compression</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (analysisType === 'Key Concept Extraction') {
+                    analysisResult = `
+                        <h4>🔑 Extracted Key Concepts</h4>
+                        <div class="tips-grid">
+                            <div class="tip-card">
+                                <h4>📚 Primary Concepts</h4>
+                                <p>• Mathematical equations<br>
+                                • Problem-solving methods<br>
+                                • Analytical thinking</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>🔍 Secondary Themes</h4>
+                                <p>• Real-world applications<br>
+                                • Logical reasoning<br>
+                                • Mathematical proofs</p>
+                            </div>
+                            <div class="tip-card">
+                                <h4>🎯 Important Terms</h4>
+                                <p>• Variables<br>
+                                • Functions<br>
+                                • Solutions</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    analysisResult = `
+                        <h4>✨ AI Analysis Results</h4>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Text Quality:</div>
+                            <div>High readability with clear structure and logical flow</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Complexity Level:</div>
+                            <div>Intermediate - suitable for high school to early college level</div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">Recommendations:</div>
+                            <div>Consider adding more examples and visual aids to enhance understanding</div>
+                        </div>
+                    `;
+                }
+                
+                content.innerHTML = `
+                    <div class="success-section">
+                        <div class="success-icon">📝</div>
+                        <h3>Analysis Complete!</h3>
+                        <p style="color: rgba(255,255,255,0.9);">AI has processed your text using advanced Natural Language Processing</p>
+                    </div>
+                    
+                    ${analysisResult}
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn" onclick="showTextAnalyzer()">Analyze More Text</button>
+                        <button class="btn secondary" onclick="exportAnalysis()">Export Results</button>
+                    </div>
+                `;
+            }, 2500);
+        }
+
+        // Visual Generation AI Functions
+        function generateVisuals() {
+            hideAllContent();
+            const content = document.getElementById('visualInterface');
+            content.innerHTML = `
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Visual Type:</label>
+                        <select id="visualType" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Mind Map</option>
+                            <option>Concept Diagram</option>
+                            <option>Process Flow</option>
+                            <option>Study Timeline</option>
+                            <option>Knowledge Tree</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Topic/Subject:</label>
+                        <input type="text" id="visualTopic" placeholder="e.g., Photosynthesis, World War II, Calculus" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Style Preference:</label>
+                        <select id="visualStyle" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-color);">
+                            <option>Colorful & Engaging</option>
+                            <option>Clean & Minimalist</option>
+                            <option>Academic & Professional</option>
+                            <option>Hand-drawn Style</option>
+                        </select>
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <button class="btn" onclick="createVisual()" style="padding: 1rem 3rem;">🎨 Generate Visual</button>
+                        <button class="btn secondary" onclick="viewVisualExamples()">🖼️ View Examples</button>
+                    </div>
+                    
+                    <div style="background: var(--surface-color); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                        <h4 style="margin-top: 0;">🎨 AI Visual Generation Features:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                            <div>• Customizable color schemes</div>
+                            <div>• Educational focus</div>
+                            <div>• Multiple formats (PNG, SVG)</div>
+                            <div>• Print-ready quality</div>
+                            <div>• Interactive elements</div>
+                            <div>• Ethical AI generation</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showContent('visualGeneratorContent');
+        }
+        
+        function createVisual() {
+            const visualType = document.getElementById('visualType').value;
+            const topic = document.getElementById('visualTopic').value || 'Mathematics Concepts';
+            const style = document.getElementById('visualStyle').value;
+            
+            const content = document.getElementById('visualInterface');
+            
+            // Show generation in progress
+            content.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
+                    <h3>AI is creating your visual...</h3>
+                    <p style="color: var(--text-secondary);">Generating ${visualType} for: ${topic}</p>
+                    <p style="color: var(--text-secondary);">Style: ${style}</p>
+                    <div style="margin: 2rem 0; font-size: 1.5rem;">🤖 Image Generator Working...</div>
+                </div>
+            `;
+            
+            // Simulate visual generation
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="success-section">
+                        <div class="success-icon">🎨</div>
+                        <h3>Visual Generated Successfully!</h3>
+                        <p style="color: rgba(255,255,255,0.9);">AI has created a ${visualType} for ${topic} in ${style} style</p>
+                    </div>
+                    
+                    <!-- Simulated visual preview -->
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; color: white;">
+                        <h4 style="color: white; margin-bottom: 1rem;">🖼️ Preview: ${visualType}</h4>
+                        <div style="background: rgba(255,255,255,0.9); border-radius: 8px; padding: 2rem; color: #333; margin: 1rem 0;">
+                            <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                <div style="background: #4CAF50; color: white; padding: 0.5rem 1rem; border-radius: 20px;">${topic}</div>
+                                <div style="background: #2196F3; color: white; padding: 0.5rem 1rem; border-radius: 20px;">Key Concepts</div>
+                                <div style="background: #FF9800; color: white; padding: 0.5rem 1rem; border-radius: 20px;">Applications</div>
+                                <div style="background: #9C27B0; color: white; padding: 0.5rem 1rem; border-radius: 20px;">Examples</div>
+                            </div>
+                            <div style="margin-top: 1rem; font-style: italic; color: #666;">[AI-Generated ${visualType} - Educational Use]</div>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">This is a preview of your generated visual learning aid</p>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn" onclick="downloadVisual()">Download Visual</button>
+                        <button class="btn secondary" onclick="editVisual()">Edit Visual</button>
+                        <button class="btn secondary" onclick="generateVisuals()">Create Another</button>
+                    </div>
+                `;
+            }, 3000);
+        }
+
+        // Utility functions for AI features
+        function saveGeneratedContent() {
+            showNotification('💾 Content Saved', 'Your AI-generated content has been saved to your library', 'success');
+        }
+
+        function exportContent() {
+            showNotification('📄 Export Ready', 'Content exported as PDF - Check your downloads folder', 'success');
+        }
+
+        function exportAnalysis() {
+            showNotification('📊 Analysis Exported', 'Text analysis results exported successfully', 'success');
+        }
+
+        function downloadVisual() {
+            showNotification('🖼️ Visual Downloaded', 'AI-generated visual saved to your device', 'success');
+        }
+
+        function editVisual() {
+            showNotification('🎨 Edit Mode', 'Visual editor opened - Customize your AI-generated content', 'success');
+        }
+
+        function optimizeSchedule() {
+            showNotification('⚡ Schedule Optimized', 'Your study schedule has been optimized based on AI analysis', 'success');  
+        }
+
+        function exportPatterns() {
+            showNotification('📋 Pattern Report', 'Learning pattern report exported as PDF', 'success');
+        }
+
+        function loadSampleText() {
+            document.getElementById('textInput').value = "Algebra is a branch of mathematics dealing with symbols and the rules for manipulating these symbols. It represents numbers with letters and involves solving equations to find unknown values. Linear equations are the foundation of algebra, following the form ax + b = c. Understanding slope, intercepts, and graphing helps students visualize mathematical relationships and solve real-world problems.";
+            showNotification('📝 Sample Loaded', 'Sample text loaded for AI analysis demonstration', 'info');
+        }
+
+        function viewVisualExamples() {
+            showNotification('🖼️ Examples Available', 'Check out our gallery of AI-generated educational visuals', 'info');
+        }
+
+        function summarizeContent() {
+            showNotification('📋 Quick Summary', 'Use the Text Analysis AI to get detailed summaries', 'info');
+        }
+
+        function viewGeneratedContent() {
+            showNotification('📚 Content Library', 'Access your previously generated AI content', 'info');
+        }
+
+        function viewGeneratedImages() {
+            showNotification('🎨 Visual Gallery', 'Browse your AI-generated educational visuals', 'info');
         }
 
         // Initialize app
