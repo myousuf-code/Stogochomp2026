@@ -231,8 +231,88 @@
             padding: 0.25rem;
         }
         
-        .close-btn:hover {
+        /* Notification system */
+        .notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            max-width: 400px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification.success {
+            border-color: #4CAF50;
+        }
+        
+        .notification.info {
+            border-color: var(--primary-color);
+        }
+        
+        .notification h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .notification p {
+            margin: 0;
             color: var(--text-color);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .notification .close-notification {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .notification .close-notification:hover {
+            color: var(--text-color);
+        }
+        
+        /* Success/confirmation sections */
+        .success-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        
+        .success-section .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success-section h3 {
+            color: white;
+            margin-bottom: 1rem;
         }
         
         .container {
@@ -1398,6 +1478,183 @@
             return responses[Math.floor(Math.random() * responses.length)];
         }
 
+        // Notification system
+        function showNotification(title, message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <button class="close-notification" onclick="this.parentElement.remove()">&times;</button>
+                <h4>${title}</h4>
+                <p>${message}</p>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // Replace alert functions with integrated content
+        function showSavePlanConfirmation() {
+            const content = document.getElementById('studyPlanDetails');
+            content.innerHTML = `
+                <div class="success-section">
+                    <div class="success-icon">✅</div>
+                    <h3>Study Plan Saved Successfully!</h3>
+                    <p>Your personalized study plan has been saved to your account. You can access it anytime from your dashboard.</p>
+                    <div style="margin-top: 2rem;">
+                        <button class="btn secondary" onclick="createStudyPlan()" style="background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3);">Create Another Plan</button>
+                        <button class="btn" onclick="startSession()" style="background: rgba(255,255,255,0.9); color: #333;">Start Studying</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function selectTemplate(templateName, duration) {
+            hideAllContent();
+            const content = document.getElementById('studyPlanDetails');
+            content.innerHTML = `
+                <div class="success-section">
+                    <div class="success-icon">🎉</div>
+                    <h3>Template Selected: ${templateName}</h3>
+                    <p>Perfect choice! This ${duration} program will help you achieve your learning goals with a proven structure.</p>
+                    <div class="progress-stats" style="margin-top: 2rem; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem;">
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white;">📚</span>
+                            <div>Template: ${templateName}</div>
+                        </div>
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white;">⏰</span>
+                            <div>Duration: ${duration}</div>
+                        </div>
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white;">🤖</span>
+                            <div>AI Optimized: Yes</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <button class="btn" onclick="customizeTemplate('${templateName}')" style="background: rgba(255,255,255,0.9); color: #333;">Customize Template</button>
+                        <button class="btn secondary" onclick="viewTemplates()" style="background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3);">Choose Different</button>
+                    </div>
+                </div>
+            `;
+            showContent('studyPlanContent');
+        }
+        
+        function customizeTemplate(templateName) {
+            const content = document.getElementById('studyPlanDetails');
+            content.innerHTML = `
+                <h3>🎯 Customizing: ${templateName}</h3>
+                <div class="schedule-item">
+                    <div class="schedule-time">Step 1:</div>
+                    <div>Choose your subjects and topics</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">Step 2:</div>
+                    <div>Set your daily time commitment</div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">Step 3:</div>
+                    <div>AI will optimize your schedule</div>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn" onclick="createStudyPlan()">Generate My Custom Plan</button>
+                </div>
+            `;
+        }
+        
+        function startStudyTimer() {
+            const content = document.getElementById('sessionDetails');
+            content.innerHTML = `
+                <div class="success-section">
+                    <div class="success-icon">🚀</div>
+                    <h3>Study Session Started!</h3>
+                    <div class="progress-stats" style="margin: 2rem 0; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem;">
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white; font-size: 2rem;" id="timerDisplay">45:00</span>
+                            <div>Time Remaining</div>
+                        </div>
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white;">🎯</span>
+                            <div>Focus Mode: Active</div>
+                        </div>
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white;">📊</span>
+                            <div>Progress: Tracking</div>
+                        </div>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.9); margin-bottom: 2rem;">Stay focused! Your next break reminder will appear in 25 minutes.</p>
+                    <div>
+                        <button class="btn secondary" onclick="pauseTimer()" style="background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3);">Pause Session</button>
+                        <button class="btn" onclick="endSession()" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">End Early</button>
+                    </div>
+                </div>
+            `;
+            
+            // Start a simple countdown timer
+            startCountdown();
+        }
+        
+        function startCountdown() {
+            let minutes = 44;
+            let seconds = 59;
+            
+            const timer = setInterval(() => {
+                const display = document.getElementById('timerDisplay');
+                if (display) {
+                    display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (seconds === 0) {
+                        if (minutes === 0) {
+                            clearInterval(timer);
+                            showSessionComplete();
+                            return;
+                        }
+                        minutes--;
+                        seconds = 59;
+                    } else {
+                        seconds--;
+                    }
+                } else {
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }
+        
+        function showSessionComplete() {
+            const content = document.getElementById('sessionDetails');
+            content.innerHTML = `
+                <div class="success-section">
+                    <div class="success-icon">🎉</div>
+                    <h3>Session Complete!</h3>
+                    <p style="color: rgba(255,255,255,0.9);">Congratulations! You've completed a 45-minute focused study session. Time for a well-deserved break!</p>
+                    <div class="progress-stats" style="margin: 2rem 0; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem;">
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white;">🎆</span>
+                            <div>Session Points: +50</div>
+                        </div>
+                        <div class="progress-item" style="color: white;">
+                            <span class="progress-number" style="color: white;">📈</span>
+                            <div>Streak: Day 6</div>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="startSession()" style="background: rgba(255,255,255,0.9); color: #333;">Start Another Session</button>
+                </div>
+            `;
+        }
+        
+        function pauseTimer() {
+            showNotification('⏸️ Session Paused', 'Your study session has been paused. Take a moment to recharge!', 'info');
+        }
+        
+        function endSession() {
+            showNotification('✅ Session Ended', 'Session ended early. Great job on the progress you made!', 'success');
+            viewSessions();
+        }
         // Content Display Functions
         function showContent(sectionId) {
             document.getElementById(sectionId).classList.remove('hidden');
@@ -1465,7 +1722,7 @@
                     <div>Practice problems, Mock tests, Review sessions</div>
                 </div>
                 <div style="margin-top: 2rem;">
-                    <button class="btn" onclick="alert('Study plan would be saved to your account!')">Save Plan</button>
+                    <button class="btn" onclick="showSavePlanConfirmation()">Save Plan</button>
                     <button class="btn secondary" onclick="startSession()">Start First Session</button>
                 </div>
             `;
@@ -1482,7 +1739,7 @@
                         <p>Intensive 4-week program for major exams</p>
                         <div style="margin-top: 1rem;">
                             <small>Duration: 2-4 weeks</small>
-                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="selectTemplate('Exam Preparation', '2-4 weeks')">Use Template</button>
                         </div>
                     </div>
                     <div class="tip-card">
@@ -1490,7 +1747,7 @@
                         <p>Long-term skill development program</p>
                         <div style="margin-top: 1rem;">
                             <small>Duration: 6-8 weeks</small>
-                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="selectTemplate('Skill Building', '6-8 weeks')">Use Template</button>
                         </div>
                     </div>
                     <div class="tip-card">
@@ -1498,7 +1755,7 @@
                         <p>Structured language acquisition plan</p>
                         <div style="margin-top: 1rem;">
                             <small>Duration: 12 weeks</small>
-                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="selectTemplate('Language Learning', '12 weeks')">Use Template</button>
                         </div>
                     </div>
                     <div class="tip-card">
@@ -1506,7 +1763,7 @@
                         <p>Complete programming bootcamp schedule</p>
                         <div style="margin-top: 1rem;">
                             <small>Duration: 8-10 weeks</small>
-                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="alert('Template selected!')">Use Template</button>
+                            <button class="btn" style="float: right; padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="selectTemplate('Programming Course', '8-10 weeks')">Use Template</button>
                         </div>
                     </div>
                 </div>
@@ -1543,7 +1800,7 @@
                 <div style="text-align: center; margin: 2rem 0;">
                     <h3>🚀 Ready to Start Your Study Session?</h3>
                     <p>Focus on: <strong>Mathematics - Algebra Review</strong></p>
-                    <button class="btn" style="font-size: 1.1rem; padding: 1rem 2rem;" onclick="alert('Study session started! Timer running...')">Start 45-Min Session</button>
+                    <button class="btn" style="font-size: 1.1rem; padding: 1rem 2rem;" onclick="startStudyTimer()">Start 45-Min Session</button>
                 </div>
             `;
             showContent('sessionContent');
@@ -1846,7 +2103,7 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                alert('👋 Successfully logged out!\n\n🔐 Session ended securely\n💾 Progress saved\n🎯 Come back anytime!\n\n📚 Thanks for using StudyWise AI!');
+                showNotification('👋 Logged Out', 'Session ended securely. Progress saved. Come back anytime!', 'success');
                 
                 const navActions = document.querySelector('.nav-actions');
                 navActions.innerHTML = `
